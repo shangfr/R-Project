@@ -11,8 +11,9 @@ library(dplyr)
 library(rpart)
 library(rpart.plot)
 
-train.data <- read.csv('E:\\Udacity\\Data Analysis High\\R\\R_Study\\Train.csv',stringsAsFactors =F)
-test.data <- read.csv('E:\\Udacity\\Data Analysis High\\R\\R_Study\\Test.csv',stringsAsFactors =F)
+setwd("F:\\github\\R-Project\\商店数据分析建模")
+train.data <- read.csv('Train.csv',stringsAsFactors =F)
+test.data <- read.csv('Test.csv',stringsAsFactors =F)
 
 
 ### Item_Identifier 唯一的产品ID
@@ -62,6 +63,7 @@ tmp2
 # 构造决策树来补充丢失值
 # 非缺失部分作为训练集,缺失的数据作为测试集
 fit <- rpart(factor(Outlet_Size)~Outlet_Type,data=all_data[all_data$Outlet_Size!='',],method = 'class')
+plot(fit) #画决策树图  
 pred <- predict(fit,all_data[all_data$Outlet_Size == '',],type='class')
 all_data$Outlet_Size[all_data$Outlet_Size == ''] <- as.vector(pred)
 # 每个商店的规模都补充完整了
@@ -131,6 +133,10 @@ ggplot(data=all_data[!is.na(all_data$Item_Outlet_Sales),],
 ggplot(data=all_data[!is.na(all_data$Item_Outlet_Sales),],
        aes(x=Outlet_Years,y=Item_Sales_Vol,fill=Outlet_Type))+
   geom_boxplot(alpha=0.7)
+
+ggplot(data=all_data[!is.na(all_data$Item_Outlet_Sales),],
+       aes(x=Outlet_Establishment_Year,y=Item_Sales_Vol,fill=Outlet_Type))+
+  geom_boxplot(alpha=0.7)
 # 结论:就开店的时间来看,开店时间越长的大商店,销量越多,利润也越高
 
 #销量与商店规模的关系
@@ -155,7 +161,7 @@ ggplot(data=all_data[!is.na(all_data$Item_Outlet_Sales),],
   facet_wrap(~Outlet_Type)+
   geom_smooth(method = 'lm',color='red')+
   theme(legend.position = 'None')
-#结论:展示的机会越大,销量就越多
+#结论:展示的机会越大,销量就越多??
 
 
 # 商品的重量与销量的关系
@@ -174,7 +180,7 @@ ggplot(data=all_data[!is.na(all_data$Item_Outlet_Sales),],
   facet_wrap(~Outlet_Type)+
   geom_smooth(method = 'lm',color='red')+
   theme(legend.position = 'None')
-#结论:商品的价格越高,销量越低
+#结论:商品的价格越高,销量越低??
 
 # 商品的类型与销量的关系
 ggplot(data=all_data[!is.na(all_data$Item_Outlet_Sales),],
